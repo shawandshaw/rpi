@@ -1,0 +1,6 @@
+https://github.com/miaoxw/EmbeddedSystemNJU2018-Demo
+
+wget 
+https://github.com/miaoxw/EmbeddedSystemNJU2018-Demo/releases/download/v1.0/libGPIO.a
+
+sudo g++ demo.cpp -o test `pkg-config --cflags --libs opencv` -L. -lwiringPi -lGPIO -lpthread
