@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 PROJECT(LaneDetection_Demo)
+SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/)
 
 FIND_PACKAGE(OpenCV REQUIRED)
 

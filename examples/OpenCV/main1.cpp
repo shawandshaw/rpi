@@ -21,7 +21,6 @@ const string THRESHOLD_WINDOW_NAME = "Threshold";
 const string DILATE_WINDOW_NAME = "Dilate";
 const string ERODE_WINDOW_NAME = "Erode";
 
-
 const int CANNY_LOWER_BOUND = 50;
 const int CANNY_UPPER_BOUND = 250;
 const int HOUGH_THRESHOLD = 150;
@@ -35,8 +34,8 @@ int main()
 		capture.open(atoi(CAM_PATH.c_str()));
 	}
 
-	double dWidth = capture.get(CV_CAP_PROP_FRAME_WIDTH);			//the width of frames of the video
-	double dHeight = capture.get(CV_CAP_PROP_FRAME_HEIGHT);		//the height of frames of the video
+	double dWidth = capture.get(CV_CAP_PROP_FRAME_WIDTH);   //the width of frames of the video
+	double dHeight = capture.get(CV_CAP_PROP_FRAME_HEIGHT); //the height of frames of the video
 	clog << "Frame Size: " << dWidth << "x" << dHeight << endl;
 
 	Mat image;
@@ -53,24 +52,24 @@ int main()
 
 		//二值化
 		Mat result_thre;
-		threshold(imgROI, result_thre,150, 255, CV_THRESH_BINARY);
+		threshold(imgROI, result_thre, 150, 255, CV_THRESH_BINARY);
 #ifdef _DEBUG
 		imshow(THRESHOLD_WINDOW_NAME, result_thre);
-#endif	
+#endif
 		//膨胀
 		Mat result_dilate;
 		Mat element = getStructuringElement(MORPH_RECT, Size(3, 3));
 		dilate(result_thre, result_dilate, element);
 #ifdef _DEBUG
 		imshow(DILATE_WINDOW_NAME, result_dilate);
-#endif	
+#endif
 
 		//腐蚀
 		Mat result_erode;
 		erode(result_dilate, result_erode, element);
 #ifdef _DEBUG
 		imshow(ERODE_WINDOW_NAME, result_erode);
-#endif	
+#endif
 
 		//Canny algorithm（边缘检测）
 		Mat contours;
@@ -90,12 +89,12 @@ int main()
 		//Draw the lines and judge the slope
 		for (vector<Vec2f>::const_iterator it = lines.begin(); it != lines.end(); ++it)
 		{
-			float rho = (*it)[0];			//First element is distance rho
-			float theta = (*it)[1];		//Second element is angle theta
+			float rho = (*it)[0];   //First element is distance rho
+			float theta = (*it)[1]; //Second element is angle theta
 
 			//Filter to remove vertical and horizontal lines,
 			//and atan(0.09) equals about 5 degrees.
-			if ((theta > 0.09&&theta < 1.48) || (theta > 1.62&&theta < 3.05))
+			if ((theta > 0.09 && theta < 1.48) || (theta > 1.62 && theta < 3.05))
 			{
 				if (theta > maxRad)
 					maxRad = theta;
@@ -106,12 +105,11 @@ int main()
 				//point of intersection of the line with first row
 				Point pt1(rho / cos(theta), 0);
 				//point of intersection of the line with last row
-				Point pt2((rho - result.rows*sin(theta)) / cos(theta), result.rows);
+				Point pt2((rho - result.rows * sin(theta)) / cos(theta), result.rows);
 				//Draw a line
 				line(result, pt1, pt2, Scalar(0, 255, 255), 3, CV_AA);
 #endif
 			}
-
 #ifdef _DEBUG
 			clog << "Line: (" << rho << "," << theta << ")\n";
 #endif
@@ -123,7 +121,6 @@ int main()
 		putText(result, overlayedText.str(), Point(10, result.rows - 10), 2, 0.8, Scalar(0, 0, 255), 0);
 		imshow(MAIN_WINDOW_NAME, result);
 #endif
-
 		lines.clear();
 		waitKey(1);
 	}

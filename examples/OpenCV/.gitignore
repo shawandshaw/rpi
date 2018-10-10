@@ -1,5 +1,3 @@
 /CMakeFiles/*
-demo
-CMakeCache.txt
-cmake_install.cmake
-makefile
+/bin/*
+/build/*
