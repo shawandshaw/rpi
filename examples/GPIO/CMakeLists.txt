@@ -17,6 +17,9 @@ SET(SRC3
 SET(SRC4
  manualDrive.cpp
 )
+SET(SRC5
+ test.cpp
+)
 SET(PROJECT_NAME
  gpio
 )
@@ -26,10 +29,12 @@ ADD_EXECUTABLE(demo1 ${SRC1})
 ADD_EXECUTABLE(demo2 ${SRC2})
 ADD_EXECUTABLE(demo3 ${SRC3})
 ADD_EXECUTABLE(demo4 ${SRC4})
+ADD_EXECUTABLE(demo5 ${SRC4})
 TARGET_LINK_LIBRARIES(demo1  GPIO wiringPi pthread rt crypt)
 TARGET_LINK_LIBRARIES(demo2  GPIO wiringPi pthread rt crypt)
 TARGET_LINK_LIBRARIES(demo3  GPIO wiringPi pthread rt crypt)
 TARGET_LINK_LIBRARIES(demo4  GPIO wiringPi pthread rt crypt)
+TARGET_LINK_LIBRARIES(demo5  GPIO wiringPi pthread rt crypt)
 # TARGET_LINK_LIBRARIES(demo1  GPIOx64 wiringPi pthread rt crypt)
 # TARGET_LINK_LIBRARIES(demo2  GPIOx64 wiringPi pthread rt crypt)
 # TARGET_LINK_LIBRARIES(demo3  GPIOx64 wiringPi pthread rt crypt)
