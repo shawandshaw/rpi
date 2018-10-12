@@ -45,6 +45,8 @@ int main()
 
     while(1)
     {
+		stopLeft();
+		stopRight();
         ch = get_char();
         if (ch)
         {
