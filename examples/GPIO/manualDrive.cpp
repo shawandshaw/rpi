@@ -45,6 +45,8 @@ int main()
 
     while(1)
     {
+		stopLeft();
+		stopRight();
         ch = get_char();
         if (ch)
         {
@@ -62,8 +64,8 @@ int main()
 					else abs_speed=speed;
 					cout<<direction<<endl;
 					cout<<speed<<endl;
-					controlLeft(direction,abs_speed);
-					controlRight(direction,abs_speed);
+					controlLeft(FORWARD,50);
+					controlRight(FORWARD,50);
 					break;
 				}
                     
@@ -75,8 +77,8 @@ int main()
 					}
 					cout<<direction<<endl;
 					cout<<speed<<endl;
-					controlLeft(direction,abs_speed);
-					controlRight(direction,abs_speed);
+					controlLeft(BACKWARD,50);
+					controlRight(BACKWARD,50);
 					break;
 				}
                     
