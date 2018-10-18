@@ -1,6 +1,8 @@
 #include "GPIOlib.h"
 #include <signal.h>
 #include <stdlib.h>
+using namespace GPIO;
+
 
 void on_exit(void)
 {
@@ -15,11 +17,10 @@ void signal_exit_handler(int sig) {
 	exit(0); 
 }
 
-using namespace GPIO;
 
 int main()
 {
-
+	init();
 	atexit(on_exit);
     signal(SIGTERM, signal_exit_handler);
     signal(SIGINT, signal_exit_handler);
