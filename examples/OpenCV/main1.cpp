@@ -20,7 +20,7 @@ const string CANNY_WINDOW_NAME = "Canny";
 const string THRESHOLD_WINDOW_NAME = "Threshold";
 const string DILATE_WINDOW_NAME = "Dilate";
 const string ERODE_WINDOW_NAME = "Erode";
-const string ROTATED_WINDOW_NAME = "Rotate";
+const string ROTATED_WINDOW_NAME = "Rotated";
 
 const int CANNY_LOWER_BOUND = 50;
 const int CANNY_UPPER_BOUND = 250;
@@ -84,7 +84,7 @@ int main()
 
 		//透视变换
 		vector<Point> not_a_rect_shape;
-		not_a_rect_shape.push_back(Point(122, 0));
+		not_a_rect_shape.push_back(Point(, 0));
 		not_a_rect_shape.push_back(Point(814, 0));
 		not_a_rect_shape.push_back(Point(22, 540));
 		not_a_rect_shape.push_back(Point(910, 540));
@@ -95,10 +95,10 @@ int main()
 		src_vertices[3] = not_a_rect_shape[3];
 
 		Point2f dst_vertices[4];
-		dst_vertices[0] = Point(0, 0);
-		dst_vertices[1] = Point(960, 0);
-		dst_vertices[2] = Point(0, 540);
-		dst_vertices[3] = Point(960, 540);
+		dst_vertices[0] = Point(image.cols*0.4, 0);
+		dst_vertices[1] = Point(image.cols*0.55, 0);
+		dst_vertices[2] = Point(0, image.rows / 3);
+		dst_vertices[3] = Point(image.cols, image.rows / 3);
 		Mat warpMatrix = getPerspectiveTransform(src_vertices, dst_vertices);
 		Mat result_rotated;
 		warpPerspective(result_erode, result_rotated, warpMatrix, result_rotated.size(), INTER_LINEAR, BORDER_CONSTANT);
