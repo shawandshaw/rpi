@@ -20,7 +20,7 @@ const string CANNY_WINDOW_NAME = "Canny";
 const string THRESHOLD_WINDOW_NAME = "Threshold";
 const string DILATE_WINDOW_NAME = "Dilate";
 const string ERODE_WINDOW_NAME = "Erode";
-const string ROTATED_WINDOW_NAME = "Rotated";
+const string ROTATED_WINDOW_NAME = "Rotate";
 
 const int CANNY_LOWER_BOUND = 50;
 const int CANNY_UPPER_BOUND = 250;
