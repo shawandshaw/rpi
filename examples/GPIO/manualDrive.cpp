@@ -66,6 +66,7 @@ int main()
 					cout<<speed<<endl;
 					controlLeft(FORWARD,50);
 					controlRight(FORWARD,50);
+					delay(1000);
 					break;
 				}
                     
@@ -79,6 +80,7 @@ int main()
 					cout<<speed<<endl;
 					controlLeft(BACKWARD,50);
 					controlRight(BACKWARD,50);
+					delay(1000);
 					break;
 				}
                     
