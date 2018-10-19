@@ -73,6 +73,14 @@ int main()
 			printf("key = %d(%c)\n\r", ch, ch);
 			switch (ch)
 			{
+			case 3:
+			case '3':
+			{
+				stopLeft();
+				stopRight();
+				delay(500);
+				break;
+			}
 			case 'w':
 			{
 				if (speed < 80)
