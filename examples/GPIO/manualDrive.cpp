@@ -79,6 +79,7 @@ int main()
 				stopLeft();
 				stopRight();
 				delay(500);
+				exit(0);
 				break;
 			}
 			case 'w':
@@ -92,8 +93,8 @@ int main()
 				}
 				else
 					abs_speed = -speed;
-				controlLeft(FORWARD, abs_speed);
-				controlRight(FORWARD, abs_speed);
+				controlLeft(direction, abs_speed);
+				controlRight(direction, abs_speed);
 				delay(500);
 				break;
 			}
@@ -111,8 +112,8 @@ int main()
 				{
 					abs_speed = speed;
 				}
-				controlLeft(BACKWARD, abs_speed);
-				controlRight(BACKWARD, abs_speed);
+				controlLeft(direction, abs_speed);
+				controlRight(dirction, abs_speed);
 				delay(500);
 				break;
 			}
