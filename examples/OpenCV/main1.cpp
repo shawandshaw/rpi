@@ -9,7 +9,7 @@
 #define PI 3.1415926
 
 //Uncomment this line at run-time to skip GUI rendering
-//#define _DEBUG
+#define _DEBUG
 
 using namespace cv;
 using namespace std;
@@ -54,63 +54,40 @@ int main()
 		Rect roi(0, image.rows / 3, image.cols, image.rows / 3);
 		Mat imgROI = image(roi);
 		cvtColor(imgROI, imgROI, COLOR_BGR2GRAY);
-/*
+
 		//∂˛÷µªØ
 		Mat result_thre;
 		threshold(imgROI, result_thre,100, 255, CV_THRESH_BINARY);
 #ifdef _DEBUG
-		imshow(THRESHOLD_WINDOW_NAME, result_thre);
+		//imshow(THRESHOLD_WINDOW_NAME, result_thre);
 #endif	
 		//≈Ú’Õ
 		Mat result_dilate;
 		Mat element = getStructuringElement(MORPH_RECT, Size(5, 5));
 		dilate(result_thre, result_dilate, element);
 #ifdef _DEBUG
-		imshow(DILATE_WINDOW_NAME, result_dilate);
+		//imshow(DILATE_WINDOW_NAME, result_dilate);
 #endif	
 
 		//∏Ø ¥
 		Mat result_erode;
 		erode(result_dilate, result_erode, element);
 #ifdef _DEBUG
-		imshow(ERODE_WINDOW_NAME, result_erode);
+		//imshow(ERODE_WINDOW_NAME, result_erode);
 #endif	
-*/
-		//Õ∏ ”±‰ªª
-		vector<Point> not_a_rect_shape;
-		not_a_rect_shape.push_back(Point(image.cols*0.4, 0));
-		not_a_rect_shape.push_back(Point(image.cols*0.55, 0));
-		not_a_rect_shape.push_back(Point(0, image.rows / 3));
-		not_a_rect_shape.push_back(Point(image.cols, image.rows / 3));
-		Point2f src_vertices[4];
-		src_vertices[0] = not_a_rect_shape[0];
-		src_vertices[1] = not_a_rect_shape[1];
-		src_vertices[2] = not_a_rect_shape[2];
-		src_vertices[3] = not_a_rect_shape[3];
 
-		Point2f dst_vertices[4];
-		dst_vertices[0] = Point(0, 0);
-		dst_vertices[1] = Point(image.cols, 0);
-		dst_vertices[2] = Point(0, image.rows / 3);
-		dst_vertices[3] = Point(image.cols, image.rows / 3);
-		Mat warpMatrix = getPerspectiveTransform(src_vertices, dst_vertices);
-		Mat result_rotated;
-		warpPerspective(imgROI, result_rotated, warpMatrix, result_rotated.size(), INTER_LINEAR, BORDER_CONSTANT);
-#ifdef _DEBUG
-		imshow(ROTATED_WINDOW_NAME, result_rotated);
-#endif
-
+		
 		//Canny algorithm£®±ﬂ‘µºÏ≤‚£©
 		Mat contours;
-		Canny(result_rotated, contours, CANNY_LOWER_BOUND, CANNY_UPPER_BOUND);
+		Canny(result_erode, contours, CANNY_LOWER_BOUND, CANNY_UPPER_BOUND);
 #ifdef _DEBUG
-		imshow(CANNY_WINDOW_NAME, contours);
+		//imshow(CANNY_WINDOW_NAME, contours);
 #endif
 
 		vector<Vec2f> lines;
 		HoughLines(contours, lines, 1, PI / 180, HOUGH_THRESHOLD);
-		Mat result(imgROI.size(), CV_8U, Scalar(255));
-		imgROI.copyTo(result);
+		Mat result1(imgROI.size(), CV_8U, Scalar(255));
+		//imgROI.copyTo(result);
 
 		float maxRad = -2 * PI;
 		float minRad = 2 * PI;
@@ -143,15 +120,75 @@ int main()
 				//point of intersection of the line with first row
 				Point pt1(rho / cos(theta), 0);
 				//point of intersection of the line with last row
-				Point pt2((rho - result.rows*sin(theta)) / cos(theta), result.rows);
+				Point pt2((rho - result1.rows*sin(theta)) / cos(theta), result1.rows);
 				//Draw a line
-				line(result, pt1, pt2, Scalar(0, 255, 255), 3, CV_AA);
+				line(result1, pt1, pt2, Scalar(0, 255, 255), 3, CV_AA);
 
 
 				clog << "Line: (" <<rho << "," << theta<< ")\n";
 #endif
 			}
 		}
+
+		//Õ∏ ”±‰ªª
+		vector<Point> not_a_rect_shape;
+		not_a_rect_shape.push_back(Point(image.cols*0.4, 0));
+		not_a_rect_shape.push_back(Point(image.cols*0.6, 0));
+		not_a_rect_shape.push_back(Point(0, image.rows / 3));
+		not_a_rect_shape.push_back(Point(image.cols, image.rows / 3));
+		Point2f src_vertices[4];
+		src_vertices[0] = not_a_rect_shape[0];
+		src_vertices[1] = not_a_rect_shape[1];
+		src_vertices[2] = not_a_rect_shape[2];
+		src_vertices[3] = not_a_rect_shape[3];
+
+		Point2f dst_vertices[4];
+		dst_vertices[0] = Point(0, 0);
+		dst_vertices[1] = Point(image.cols, 0);
+		dst_vertices[2] = Point(0, image.rows / 3);
+		dst_vertices[3] = Point(image.cols, image.rows / 3);
+		Mat warpMatrix = getPerspectiveTransform(src_vertices, dst_vertices);
+		Mat result_rotated;
+		warpPerspective(result1, result_rotated, warpMatrix, result_rotated.size(), INTER_LINEAR, BORDER_CONSTANT);
+#ifdef _DEBUG
+		imshow(ROTATED_WINDOW_NAME, result_rotated);
+#endif
+
+		//Canny algorithm£®±ﬂ‘µºÏ≤‚£©
+		Canny(result_rotated, contours, CANNY_LOWER_BOUND, CANNY_UPPER_BOUND);
+
+		HoughLines(contours, lines, 1, PI / 180, HOUGH_THRESHOLD);
+		Mat result2(imgROI.size(), CV_8U, Scalar(255));
+
+		//Draw the lines and judge the slope
+		for (vector<Vec2f>::const_iterator it = lines.begin(); it != lines.end(); ++it)
+		{
+			float rho = (*it)[0];			//First element is distance rho
+			float theta = (*it)[1];		//Second element is angle theta
+
+			//Filter to remove vertical and horizontal lines,
+			//and atan(0.09) equals about 5 degrees.
+			if ((theta > 0.09&&theta < 1.48) || (theta > 1.62&&theta < 3.05))
+			{
+				if (theta > maxRad)
+					maxRad = theta;
+				if (theta < minRad)
+					minRad = theta;
+
+#ifdef _DEBUG
+				//point of intersection of the line with first row
+				Point pt1(rho / cos(theta), 0);
+				//point of intersection of the line with last row
+				Point pt2((rho - result2.rows*sin(theta)) / cos(theta), result2.rows);
+				//Draw a line
+				line(result2, pt1, pt2, Scalar(0, 255, 255), 3, CV_AA);
+
+
+				clog << "Line: (" << rho << "," << theta << ")\n";
+#endif
+			}
+		}
+
 		/*//myself
 		test_line result_lines[3];
 		int tempNum[3] = { 0,0,0 };
@@ -183,8 +220,10 @@ int main()
 #ifdef _DEBUG
 		stringstream overlayedText;
 		overlayedText << "Lines: " << lines.size();
-		putText(result, overlayedText.str(), Point(10, result.rows - 10), 2, 0.8, Scalar(0, 0, 255), 0);
-		imshow(MAIN_WINDOW_NAME, result);
+		putText(result1, overlayedText.str(), Point(10, result1.rows - 10), 2, 0.8, Scalar(0, 0, 255), 0);
+		imshow(MAIN_WINDOW_NAME, result1);
+		imshow("result2", result2);
+
 #endif
 
 		lines.clear();
