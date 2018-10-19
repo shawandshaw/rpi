@@ -78,7 +78,7 @@ int main()
 					cout<<speed<<endl;
 					controlLeft(FORWARD,abs_speed);
 					controlRight(FORWARD,abs_speed);
-					delay(500);
+					delay(1000);
 					break;
 				}
                     
@@ -92,7 +92,7 @@ int main()
 					cout<<speed<<endl;
 					controlLeft(BACKWARD,abs_speed);
 					controlRight(BACKWARD,abs_speed);
-					delay(500);
+					delay(1000);
 					break;
 				}
                     
@@ -100,14 +100,12 @@ int main()
 					if(angle>-45)angle--;
 					cout<<angle<<endl;
 					turnTo(angle);
-					delay(500);
 					break;
 				}
                 case 'd':{
 					if(angle<45)angle++;
 					cout<<angle<<endl;
 					turnTo(angle);
-					delay(500);
 					break;
 				}
             }
