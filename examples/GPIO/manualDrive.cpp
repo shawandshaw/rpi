@@ -113,7 +113,7 @@ int main()
 					abs_speed = speed;
 				}
 				controlLeft(direction, abs_speed);
-				controlRight(dirction, abs_speed);
+				controlRight(direction, abs_speed);
 				delay(500);
 				break;
 			}
