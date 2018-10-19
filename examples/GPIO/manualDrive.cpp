@@ -78,7 +78,7 @@ int main()
 			{
 				stopLeft();
 				stopRight();
-				delay(500);
+				delay(300);
 				exit(0);
 				break;
 			}
@@ -95,7 +95,7 @@ int main()
 					abs_speed = -speed;
 				controlLeft(direction, abs_speed);
 				controlRight(direction, abs_speed);
-				delay(500);
+				delay(300);
 				break;
 			}
 
@@ -114,7 +114,7 @@ int main()
 				}
 				controlLeft(direction, abs_speed);
 				controlRight(direction, abs_speed);
-				delay(500);
+				delay(300);
 				break;
 			}
 
