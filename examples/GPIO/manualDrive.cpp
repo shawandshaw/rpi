@@ -1,6 +1,8 @@
 #include<iostream>
 #include <stdlib.h>
 #include <signal.h>
+#include <termios.h>   
+#include <unistd.h> 
 #include "GPIOlib.h"
 
 using namespace std;
@@ -20,6 +22,20 @@ void signal_crash_handler(int sig) {
 void signal_exit_handler(int sig) { 
 	exit(0); 
 }
+int getch(void) {  
+    struct termios tm, tm_old;  
+    int fd = STDIN_FILENO, c;  
+    if(tcgetattr(fd, &tm) < 0)  
+    return -1;  
+    tm_old = tm;  
+    cfmakeraw(&tm);  
+    if(tcsetattr(fd, TCSANOW, &tm) < 0)  
+    return -1;  
+    c = fgetc(stdin);  
+    if(tcsetattr(fd, TCSANOW, &tm_old) < 0)  
+    return -1;  
+    return c;  
+}  
 
 int main()
 {
@@ -48,7 +64,7 @@ int main()
     while(1)
     {
 		fflush(stdin);
-        ch = getchar();
+        ch = getch();
         if (ch)
         {
             printf("key = %d(%c)\n\r", ch, ch);
