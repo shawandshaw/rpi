@@ -34,9 +34,10 @@ int main()
     signal(SIGABRT, signal_crash_handler);
 
 	//Move forward
+	turnTo(0);
 	controlLeft(FORWARD,20);
 	controlRight(FORWARD,20);
-	delay(3000);
+	delay(8000);
 
 	//Stop
 	stopLeft();

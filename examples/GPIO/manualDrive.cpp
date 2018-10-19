@@ -1,42 +1,44 @@
 #include<iostream>
 #include <stdlib.h>
+#include <signal.h>
 #include "GPIOlib.h"
 
 using namespace std;
 using namespace GPIO;
 
-#define TTY_PATH            "/dev/tty"
-#define STTY_US             "stty raw -echo -F "
-#define STTY_DEF            "stty -raw echo -F "
 
-static int get_char();
 
-static int get_char()
+void on_exit(void)
 {
-    fd_set rfds;
-    struct timeval tv;
-    int ch = 0;
-
-    FD_ZERO(&rfds);
-    FD_SET(0, &rfds);
-    tv.tv_sec = 0;
-    tv.tv_usec = 10; //设置等待超时时间
-
-    //检测键盘是否有输入
-    if (select(1, &rfds, NULL, NULL, &tv) > 0)
-    {
-        ch = getchar(); 
-    }
-
-    return ch;
+    stopLeft();
+	stopRight();
+}
+void signal_crash_handler(int sig) { 
+	on_exit(); 
+	exit(-1); 
+} 
+void signal_exit_handler(int sig) { 
+	exit(0); 
 }
 
 int main()
 {
     int ch = 0;
-    system(STTY_US TTY_PATH);
 
 	init();
+
+	atexit(on_exit);
+    signal(SIGTERM, signal_exit_handler);
+    signal(SIGINT, signal_exit_handler);
+
+    // ignore SIGPIPE
+    signal(SIGPIPE, SIG_IGN);
+
+    signal(SIGBUS, signal_crash_handler);     // 总线错误
+    signal(SIGSEGV, signal_crash_handler);    // SIGSEGV，非法内存访问
+    signal(SIGFPE, signal_crash_handler);       // SIGFPE，数学相关的异常，如被0除，浮点溢出，等等
+    signal(SIGABRT, signal_crash_handler);
+
 	int speed=0;
 	int abs_speed=0;
 	int direction=FORWARD;
@@ -45,28 +47,22 @@ int main()
 
     while(1)
     {
-		stopLeft();
-		stopRight();
-        ch = get_char();
+		fflush(stdin);
+        ch = getchar();
         if (ch)
         {
             printf("key = %d(%c)\n\r", ch, ch);
             switch (ch)
             {
-                case 3: //ctrl+c
-					stopLeft();
-					stopRight();
-                    system(STTY_DEF TTY_PATH);
-					return 0;
                 case 'w':{
 					if(speed<80)speed++;
 					if(speed>0)direction=FORWARD;
 					else abs_speed=speed;
 					cout<<direction<<endl;
 					cout<<speed<<endl;
-					controlLeft(FORWARD,50);
-					controlRight(FORWARD,50);
-					delay(1000);
+					controlLeft(FORWARD,abs_speed);
+					controlRight(FORWARD,abs_speed);
+					delay(500);
 					break;
 				}
                     
@@ -78,9 +74,9 @@ int main()
 					}
 					cout<<direction<<endl;
 					cout<<speed<<endl;
-					controlLeft(BACKWARD,50);
-					controlRight(BACKWARD,50);
-					delay(1000);
+					controlLeft(BACKWARD,abs_speed);
+					controlRight(BACKWARD,abs_speed);
+					delay(500);
 					break;
 				}
                     
@@ -88,12 +84,14 @@ int main()
 					if(angle>-45)angle--;
 					cout<<angle<<endl;
 					turnTo(angle);
+					delay(500);
 					break;
 				}
                 case 'd':{
 					if(angle<45)angle++;
 					cout<<angle<<endl;
 					turnTo(angle);
+					delay(500);
 					break;
 				}
             }
