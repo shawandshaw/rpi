@@ -90,8 +90,8 @@ int main()
 					}
 					cout<<direction<<endl;
 					cout<<speed<<endl;
-					controlLeft(BACKWARD,abs_speed);
-					controlRight(BACKWARD,abs_speed);
+					controlLeft(BACKWARD,20);
+					controlRight(BACKWARD,20);
 					delay(1000);
 					break;
 				}
