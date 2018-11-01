@@ -19,6 +19,8 @@
 
 using namespace cv;
 using namespace std;
+using namespace GPIO;
+
 
 void on_exit(void)
 {
