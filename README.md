@@ -10,6 +10,7 @@ Provided in `Releases` section
 * Demos to use OpenCV
 
 ## Dependencies
+
 ### Hardware
 * RaspberryPi  
 RaspberryPi 3 Model B is provided. When using Raspberry Pi 2, maybe you need an extra wireless USB NIC device.
